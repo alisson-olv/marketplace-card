@@ -1,6 +1,7 @@
 import { UserCard } from "./userCard";
 import { CardsItemsProps } from "@/types/cards";
 import SkeletonCard from "../skeletonCard";
+import Link from "next/link";
 
 interface DataProps {
   data: CardsItemsProps[];
@@ -31,6 +32,15 @@ export function UserCards({ data, isLoading, descriptionPage }: DataProps) {
             )
           )}
         </ul>
+        {data.length === 0 && (
+          <p className="text-white text-2xl text-center">
+            You dont have cards, go{" "}
+            <Link className="text-primary font-bold underline" href="/">
+              Home
+            </Link>{" "}
+            to get a new one.
+          </p>
+        )}
       </div>
     </div>
   );
