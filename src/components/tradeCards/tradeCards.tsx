@@ -7,6 +7,7 @@ import DeleteTrade from "@/actions/deleteTrade";
 import Button from "../ui/button";
 import NotifyToast from "@/helper/notifyToast";
 import { ToastContainer } from "react-toastify";
+import { useEffect, useState } from "react";
 
 interface DataProps {
   data: TradesListProps[];
@@ -16,6 +17,15 @@ interface DataProps {
 
 export function TradeCards({ data, isLoading, descriptionPage }: DataProps) {
   const { userLogged } = useUser();
+  const [filteredData, setFilteredData] = useState<TradesListProps[]>(data);
+
+  useEffect(() => {
+    const filtered = data.map((item) => {
+      return { ...item };
+    });
+
+    setFilteredData(filtered);
+  }, [data]);
 
   const deleteTrade = async (id: string) => {
     try {
@@ -23,7 +33,7 @@ export function TradeCards({ data, isLoading, descriptionPage }: DataProps) {
 
       if (!error) {
         NotifyToast({ message: "Trade deleted", type: "success" });
-        setTimeout(() => window.location.reload(), 1000);
+        setFilteredData(filteredData.filter((trade) => trade.id !== id));
       } else {
         NotifyToast({ message: error, type: "error" });
       }
@@ -45,20 +55,18 @@ export function TradeCards({ data, isLoading, descriptionPage }: DataProps) {
           {isLoading ? (
             <SkeletonTrade cards={8} />
           ) : (
-            data?.map((trade) =>
+            filteredData?.map((trade) =>
               trade.tradeCards.length > 0 ? (
                 <div className="flex flex-col" key={trade.id}>
-                  <h3 className="text-base font-semibold leading-7 text-black bg-slate-50 capitalize flex justify-around items-center p-2">
-                    User: {trade.user.name}{" "}
-                    {userLogged?.id === trade.userId ? (
-                      <span>
-                        <Button active onClick={() => deleteTrade(trade.id)}>
-                          Delete
-                        </Button>
-                      </span>
-                    ) : null}
+                  <h3
+                    className={`text-base font-semibold leading-7 text-black capitalize flex justify-around items-center p-2 ${
+                      userLogged?.id === trade.userId
+                        ? "bg-primary text-white"
+                        : "bg-slate-50"
+                    }`}
+                  >
+                    User: {trade.user.name}
                   </h3>
-
                   <div className="bg-gray-800 p-6 flex-grow flex flex-col">
                     <div className="flex-grow items-center">
                       {trade.tradeCards.map((tradeCard, index) =>
@@ -78,7 +86,14 @@ export function TradeCards({ data, isLoading, descriptionPage }: DataProps) {
                         ) : null
                       )}
                     </div>
-                    <h4 className="text-xs mt-5 font-semibold leading-7 text-black bg-slate-50">
+                    {userLogged?.id === trade.userId ? (
+                      <div className="pt-3">
+                        <Button active onClick={() => deleteTrade(trade.id)}>
+                          Delete trade
+                        </Button>
+                      </div>
+                    ) : null}
+                    <h4 className="text-xs mt-5 font-semibold leading-7 text-black bg-slate-50 py-1 px-2">
                       Trade Id: {trade.id}
                     </h4>
                   </div>
