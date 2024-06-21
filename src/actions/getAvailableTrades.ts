@@ -1,10 +1,6 @@
 "use server";
 import ApiError from "@/helper/apiError";
-import {
-  GetTradesProps,
-  TradeCardsProps,
-  TradesListProps,
-} from "@/types/trades";
+import { GetTradesProps } from "@/types/trades";
 
 interface GetTradesQueryProps {
   rowsPerPage: number;
@@ -33,39 +29,9 @@ export default async function GetAvailableTrades({
     if (!response.ok)
       throw new Error("Error to get available trades, reload the page.");
 
-    const responseData = await response.json();
+    const responseData = (await response.json()) as GetTradesProps;
 
-    // Validar e mapear os dados para as interfaces definidas
-    const data: GetTradesProps = {
-      list: responseData.list.map((item: TradesListProps) => ({
-        id: item.id,
-        userId: item.userId,
-        createdAt: new Date(item.createdAt),
-        user: {
-          name: item.user.name,
-        },
-        tradeCards: item.tradeCards.map((tradeCard: TradeCardsProps) => ({
-          id: tradeCard.id,
-          cardId: tradeCard.cardId,
-          tradeId: tradeCard.tradeId,
-          type: tradeCard.type,
-          name: tradeCard.card.name,
-          description: tradeCard.card.description,
-          imageUrl: tradeCard.card.imageUrl,
-          card: {
-            id: tradeCard.card.id,
-            name: tradeCard.card.name,
-            description: tradeCard.card.description,
-            imageUrl: tradeCard.card.imageUrl,
-          },
-        })),
-      })),
-      rpp: responseData.rpp,
-      page: responseData.page,
-      more: responseData.more,
-    };
-
-    return { data, error: null };
+    return { data: responseData, error: null };
   } catch (error: unknown) {
     return ApiError(error);
   }
