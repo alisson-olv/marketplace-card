@@ -18,12 +18,14 @@ export function Header() {
   return (
     <header className="bg-white">
       <nav
-        className="mx-auto flex max-w-7xl items-center justify-between gap-x-6 p-6 lg:px-8"
+        className="mx-auto flex max-w-7xl items-center justify-between gap-x-4 p-6 lg:px-8"
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5">
-            <h2 className="text-primary text-2xl font-bold">The Gathering</h2>
+            <h2 className="text-primary text-2xl font-bold">
+              The <br className="sm:hidden" /> Gathering
+            </h2>
           </Link>
         </div>
         <div className="hidden lg:flex lg:gap-x-12">
@@ -70,7 +72,7 @@ export function Header() {
             </Link>
             <Link
               href="/register"
-              className="rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               Register
             </Link>
@@ -95,14 +97,14 @@ export function Header() {
         <div className="fixed inset-0 z-10" />
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center gap-x-6">
-            <a href="#" className="-m-1.5 p-1.5">
+            <Link href="/" className="-m-1.5 p-1.5">
               <h2 className="text-primary text-2xl font-bold">The Gathering</h2>
-            </a>
+            </Link>
             <a
-              href="#"
-              className="ml-auto rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              href="/login"
+              className="ml-auto rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
-              Sign up
+              Sign in
             </a>
             <button
               type="button"
@@ -125,14 +127,16 @@ export function Header() {
                     {item.name}
                   </a>
                 ))}
-              </div>
-              <div className="py-6">
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Log in
-                </a>
+                {userLogged && (
+                  <div className="pt-2 block rounded-lg">
+                    <a
+                      href="/account"
+                      className="text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    >
+                      My account
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
           </div>
